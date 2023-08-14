@@ -3,12 +3,6 @@ import EmptyCoursesList from './components/EmptyList/EmptyCoursesList';
 // import SearchBar from './components/SearchBar/SearchBar';
 import React from 'react';
 import styles from './Courses.module.css';
-
-// import {
-// 	mockedCoursesList,
-// 	mockedAuthorsList,
-// 	// mockedCoursesListEmpty,
-// } from '../../constants';
 import Button from '../../common/Button/Button';
 
 const getAuthorsNameList = (authorsIds, authorsList) => {
@@ -20,10 +14,10 @@ const getAuthorsNameList = (authorsIds, authorsList) => {
 };
 
 const Courses = ({ onInfoClick, coursesList, authorsList }) => {
-	// if (mockedCoursesListEmpty.length > 0) {
-	if (authorsList.length > 0) {
+	if (coursesList.length > 0) {
 		const listItems = coursesList.map((course) => (
 			<CourseCard
+				key={course.id}
 				onInfoClick={onInfoClick}
 				title={course.title}
 				id={course.id}
