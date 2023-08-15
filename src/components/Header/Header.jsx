@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import Logo from './components/Logo/logo';
 import Button from '../../common/Button/Button';
 import styles from './Header.module.css';
+import { LOGOUT_LABEL, LOGIN_LABEL } from '../../constants';
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const logo = require('../../assets/courseLogo.png');
 
@@ -21,7 +22,7 @@ const Header = (props) => {
 			<div className={styles.username}> {userName} </div>
 			<Button
 				onClick={handleButtonClick}
-				label={isAuthorized ? 'Logout' : 'Login'}
+				label={isAuthorized ? LOGOUT_LABEL : LOGIN_LABEL}
 			/>
 		</div>
 	);

@@ -2,6 +2,7 @@ import styles from './CourseInfo.module.css';
 import Button from '../../common/Button/Button';
 import { formatTime } from '../../helpers/getSourseDuration';
 import { modifyDateFormat } from '../../helpers/formatCreationDate';
+import { BACK_LABEL } from '../../constants';
 
 const CourseInfo = (props) => {
 	return (
@@ -31,7 +32,7 @@ const CourseInfo = (props) => {
 					</div>
 				</div>
 			</div>
-			<Button label='Back' onClick={() => props.onBackClick(props)} />
+			<Button label={BACK_LABEL} onClick={() => props.onBackClick(props)} />
 		</div>
 	);
 };

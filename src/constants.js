@@ -49,3 +49,10 @@ export const mockedAuthorsList = [
 		name: 'Valentina Larina',
 	},
 ];
+
+export const SEARCH_LABEL = 'Search';
+export const LOGIN_LABEL = 'Login';
+export const LOGOUT_LABEL = 'Loout';
+export const ADD_NEW_COURSE_LABEL = 'Add new course';
+export const SHOW_COURSE_LABEL = 'Show course';
+export const BACK_LABEL = 'Back';

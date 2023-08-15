@@ -5,6 +5,7 @@ import { modifyDateFormat } from '../../../../helpers/formatCreationDate';
 import { formatTime } from '../../../../helpers/getSourseDuration';
 import trash from '../../../../assets/trash.png';
 import edit from '../../../../assets/edit.png';
+import { SHOW_COURSE_LABEL } from '../../../../constants';
 
 const CourseCard = (props) => {
 	return (
@@ -26,15 +27,11 @@ const CourseCard = (props) => {
 					</div>
 					<div className={styles.buttons}>
 						<Button
-							label='Show Course'
+							label={SHOW_COURSE_LABEL}
 							onClick={() => props.onInfoClick(props)}
 						/>
-						<Button
-							className={styles.btnTrash}
-							label='Trash'
-							imagePath={trash}
-						/>
-						<Button className={styles.btnEdit} label='Edit' imagePath={edit} />
+						<Button className={styles.btnTrash} imagePath={trash} />
+						<Button className={styles.btnEdit} imagePath={edit} />
 					</div>
 				</div>
 			</div>

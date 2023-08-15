@@ -1,5 +1,6 @@
 import Button from '../../../../common/Button/Button';
 import styles from './EmptyCoursesList.module.css';
+import { ADD_NEW_COURSE_LABEL } from '../../../../constants';
 
 const EmptyCoursesList = () => {
 	return (
@@ -8,7 +9,7 @@ const EmptyCoursesList = () => {
 			<div className={styles.description}>
 				Please use 'Add New Course' button to add new course
 			</div>
-			<Button label='Add New Course' />
+			<Button label={ADD_NEW_COURSE_LABEL} />
 		</div>
 	);
 };

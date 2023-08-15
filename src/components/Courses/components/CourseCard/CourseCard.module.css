@@ -34,17 +34,12 @@
 	max-width: 35%;
 
 }
-.txt {
-	white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
 .buttons {
 	display: flex;
 	margin-top: 30px;
 	justify-content: space-between
 }
 
-.buttons div {
+.buttons button {
 	margin-right: 15px;
 }

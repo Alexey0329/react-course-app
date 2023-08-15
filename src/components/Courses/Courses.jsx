@@ -4,6 +4,7 @@ import EmptyCoursesList from './components/EmptyList/EmptyCoursesList';
 import React from 'react';
 import styles from './Courses.module.css';
 import Button from '../../common/Button/Button';
+import { ADD_NEW_COURSE_LABEL } from '../../constants';
 
 const getAuthorsNameList = (authorsIds, authorsList) => {
 	return authorsIds.map((id) => {
@@ -31,7 +32,10 @@ const Courses = ({ onInfoClick, coursesList, authorsList }) => {
 			<div className={styles.coursesList}>
 				<div className={styles.searchBarContainer}>
 					{/* <SearchBar className={styles.searchBar} /> */}
-					<Button className={styles.addCourseButton} label='Add New Course' />
+					<Button
+						className={styles.addCourseButton}
+						label={ADD_NEW_COURSE_LABEL}
+					/>
 				</div>
 
 				<div>{listItems}</div>
