@@ -1,3 +1,5 @@
+export const SERVER_URL = 'http://localhost:4000';
+
 export const mockedCoursesList = [
 	{
 		id: 'de5aaa59-90f5-4dbc-b8a9-aaf205c551ba',
@@ -52,7 +54,10 @@ export const mockedAuthorsList = [
 
 export const SEARCH_LABEL = 'Search';
 export const LOGIN_LABEL = 'Login';
-export const LOGOUT_LABEL = 'Loout';
+export const LOGOUT_LABEL = 'Logout';
 export const ADD_NEW_COURSE_LABEL = 'Add new course';
 export const SHOW_COURSE_LABEL = 'Show course';
 export const BACK_LABEL = 'Back';
+export const CANCEL_LABEL = 'Cancel';
+export const CREATE_AUTHOR_LABEL = 'Create author';
+export const CREATE_COURSE_LABEL = 'Create course';

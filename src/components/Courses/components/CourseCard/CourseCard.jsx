@@ -6,6 +6,7 @@ import { formatTime } from '../../../../helpers/getSourseDuration';
 import trash from '../../../../assets/trash.png';
 import edit from '../../../../assets/edit.png';
 import { SHOW_COURSE_LABEL } from '../../../../constants';
+import PropTypes from 'prop-types';
 
 const CourseCard = (props) => {
 	return (
@@ -23,7 +24,8 @@ const CourseCard = (props) => {
 						<strong>Duration:</strong> {formatTime(props.duration)}
 					</div>
 					<div>
-						<strong>Created:</strong> {modifyDateFormat(props.creationDate)}
+						<strong>Created:</strong>{' '}
+						{modifyDateFormat(props.creationDate || '01/01/1970')}
 					</div>
 					<div className={styles.buttons}>
 						<Button
@@ -37,6 +39,15 @@ const CourseCard = (props) => {
 			</div>
 		</div>
 	);
+};
+
+CourseCard.propTypes = {
+	title: PropTypes.string,
+	description: PropTypes.string,
+	authors: PropTypes.string,
+	duration: PropTypes.number,
+	creationDate: PropTypes.string,
+	onInfoClick: PropTypes.func,
 };
 
 export default CourseCard;

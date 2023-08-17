@@ -7,11 +7,13 @@
 }
 
 .username {
-  font-family: 'Open Sans';
-  font-style: normal;
-  font-weight: 600;
-  font-size: 14px;
-  line-height: 20px;
-  text-align: right;
+  font-weight: 700;
+  font-size: 20px;
   color: #333E48;
+  margin-right: 10px;
+}
+
+.rightBlock {
+  display: flex;
+  align-items: center;
 }

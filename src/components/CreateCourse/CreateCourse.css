@@ -1,0 +1,110 @@
+.edit-form-container {
+  margin-top: 30px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.edit-form {
+  width: 1100px;
+  padding: 20px 70px;
+  background: #ffffff;
+  border: 1px solid #cfcfcf;
+  border-radius: 4px;
+  box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.1);
+}
+.edit-block {
+  font-weight: 700;
+  font-size: 24px;
+  margin-bottom: 10px;
+}
+
+.main-info-container {
+  margin-top: 10px;
+}
+
+.main-info-input {
+  margin: 0 auto;
+  width: 100%;
+}
+
+textarea.main-info-input {
+  height: 80px;
+}
+
+.title {
+  margin-bottom: 30px;
+  font-weight: 700;
+  font-size: 32px;
+  text-transform: capitalize;
+  color: #333e48;
+}
+
+.action-buttons {
+  margin-top: 20px;
+  display: flex;
+  flex-direction: row-reverse;
+}
+
+.action-buttons Button{
+margin-left: 20px;
+}
+
+.authors-input-group {
+  display: flex;
+  align-items: center;
+}
+.authors-input-group Button {
+  margin-left: 20px;
+margin-top: 23px;
+}
+
+.edit-input-group {
+  margin: 10px auto;
+}
+
+.authors-list {
+  height: 500px;
+}
+
+.edit-input-group input{
+ width: 400px;
+}
+
+.duration-container {
+  margin-top: 10px;
+}
+.authors-list-container {
+  margin-top: 10px;
+}
+
+.authors-container {
+  display: flex;
+  justify-content: space-between;
+}
+
+
+label {
+  font-weight: 700;
+  font-size: 16px;
+  line-height: 20px;
+  color: #333e48;
+  display: block;
+  margin-bottom: 5px;
+}
+
+input {
+  margin: 0 auto;
+  padding: 8px;
+  box-sizing: border-box;
+  height: 50px;
+  background: #ffffff;
+  border: 1px solid #cfcfcf;
+  border-radius: 4px;
+  font-family: "Open Sans";
+  font-style: normal;
+  font-weight: 400;
+  font-size: 16px;
+  line-height: 24px;
+}
+

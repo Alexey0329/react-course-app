@@ -2,39 +2,67 @@ import styles from './CourseInfo.module.css';
 import Button from '../../common/Button/Button';
 import { formatTime } from '../../helpers/getSourseDuration';
 import { modifyDateFormat } from '../../helpers/formatCreationDate';
-import { BACK_LABEL } from '../../constants';
+import { BACK_LABEL, mockedAuthorsList } from '../../constants';
+import React from 'react';
+import { useParams } from 'react-router-dom';
+import PropTypes from 'prop-types';
 
 const CourseInfo = (props) => {
+	const params = useParams();
+	const prodId = params.courseId;
+	let foundCourse = props.coursesList.find((course) => course.id === prodId);
+
+	let authors = foundCourse.authors.map(
+		(author) => mockedAuthorsList.find((auth) => auth.id === author).name
+	);
+
+	let course = Object.assign({}, foundCourse);
+	course.authors = authors.join(', ');
+
 	return (
 		<div className={styles.info}>
-			<div className={styles.title}>{props.course.title} </div>
+			<div className={styles.title}>{course.title} </div>
 			<div className={styles.infoCard}>
 				<div className={styles.description}>
 					<div className={styles.descriptionLabel}>Description:</div>
-					{props.course.description}
+					{course.description}
 				</div>
 				<div className={styles.details}>
 					<div className={styles.id}>
 						<strong>ID:</strong>
-						<span>{props.course.id}</span>
+						<span>{course.id}</span>
 					</div>
 					<div className={styles.duration}>
 						<strong>Duration:</strong>
-						<span>{formatTime(props.course.duration)}</span>
+						<span>{formatTime(course.duration)}</span>
 					</div>
 					<div className={styles.created}>
 						<strong>Created:</strong>
-						<span>{modifyDateFormat(props.course.creationDate)}</span>
+						<span>{modifyDateFormat(course.creationDate || '01/01/1970')}</span>
 					</div>
 					<div className={styles.authors}>
 						<strong>Authors:</strong>
-						<span>{props.course.authors}</span>
+						<span>{course.authors}</span>
 					</div>
 				</div>
 			</div>
-			<Button label={BACK_LABEL} onClick={() => props.onBackClick(props)} />
+			<Button
+				className='back-button'
+				label={BACK_LABEL}
+				onClick={() => props.onBackClick(props)}
+				imagePath={undefined}
+			/>
 		</div>
 	);
+};
+
+CourseInfo.propTypes = {
+	title: PropTypes.string,
+	description: PropTypes.string,
+	id: PropTypes.string,
+	duration: PropTypes.number,
+	creationDate: PropTypes.string,
+	authors: PropTypes.arrayOf(PropTypes.string),
 };
 
 export default CourseInfo;
