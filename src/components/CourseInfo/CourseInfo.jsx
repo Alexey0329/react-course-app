@@ -1,23 +1,30 @@
-import styles from './CourseInfo.module.css';
+import React from 'react';
+import { useNavigate, useParams } from 'react-router-dom';
+import { useSelector } from 'react-redux';
+
 import Button from '../../common/Button/Button';
 import { formatTime } from '../../helpers/getSourseDuration';
 import { modifyDateFormat } from '../../helpers/formatCreationDate';
-import { BACK_LABEL, mockedAuthorsList } from '../../constants';
-import React from 'react';
-import { useParams } from 'react-router-dom';
-import PropTypes from 'prop-types';
+import { BACK_LABEL } from '../../constants';
+import { getAuthors, getCourses } from '../../store/selectors';
 
-const CourseInfo = (props) => {
+import styles from './CourseInfo.module.css';
+
+const CourseInfo = () => {
+	const navigate = useNavigate();
+	const courses = useSelector(getCourses);
+	const allAuthors = useSelector(getAuthors);
 	const params = useParams();
 	const prodId = params.courseId;
-	let foundCourse = props.coursesList.find((course) => course.id === prodId);
-
-	let authors = foundCourse.authors.map(
-		(author) => mockedAuthorsList.find((auth) => auth.id === author).name
+	const foundCourse = courses.find((course) => course.id === prodId);
+	const authors = foundCourse.authors.map(
+		(author) => allAuthors.find((auth) => auth.id === author).name
 	);
-
-	let course = Object.assign({}, foundCourse);
+	const course = Object.assign({}, foundCourse);
 	course.authors = authors.join(', ');
+	const handleBackClick = () => {
+		navigate(`/courses`);
+	};
 
 	return (
 		<div className={styles.info}>
@@ -49,20 +56,11 @@ const CourseInfo = (props) => {
 			<Button
 				className='back-button'
 				label={BACK_LABEL}
-				onClick={() => props.onBackClick(props)}
+				onClick={handleBackClick}
 				imagePath={undefined}
 			/>
 		</div>
 	);
-};
-
-CourseInfo.propTypes = {
-	title: PropTypes.string,
-	description: PropTypes.string,
-	id: PropTypes.string,
-	duration: PropTypes.number,
-	creationDate: PropTypes.string,
-	authors: PropTypes.arrayOf(PropTypes.string),
 };
 
 export default CourseInfo;

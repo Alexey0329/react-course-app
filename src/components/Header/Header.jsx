@@ -1,22 +1,25 @@
+import { useNavigate } from 'react-router-dom';
+import { useSelector, useDispatch } from 'react-redux';
 import React, { useState, useEffect } from 'react';
+
 import Logo from './components/Logo/logo';
 import Button from '../../common/Button/Button';
-import styles from './Header.module.css';
 import { LOGOUT_LABEL, LOGIN_LABEL } from '../../constants';
-import { useNavigate, useLocation } from 'react-router-dom';
-import PropTypes from 'prop-types';
+import { userLogoutAction } from '../../store/user/actions';
+import { getUser } from '../../store/selectors';
+
+import styles from './Header.module.css';
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const logo = require('../../assets/courseLogo.png');
 
-const Header = (props) => {
+const Header = () => {
 	const [userName, setUserName] = useState('');
 	const [isAuthorized, setIsAuthorized] = useState(false);
 	const userToken = localStorage.getItem('userToken');
-	// FIXME - better way to handle userName after user is logged in, how to pass it in header ?
 	const name = localStorage.getItem('userName');
 
-	const location = useLocation();
-	console.log('Location' + JSON.stringify(location));
+	const user = useSelector(getUser);
+	const dispatch = useDispatch();
 
 	useEffect(() => {
 		setIsAuthorized(!!userToken);
@@ -31,11 +34,12 @@ const Header = (props) => {
 			localStorage.removeItem('isAdmin');
 			localStorage.removeItem('userName');
 			setIsAuthorized(false);
+			dispatch(userLogoutAction());
 			setUserName('');
 			navigate('/');
 		} else {
 			setIsAuthorized(true);
-			setUserName(name);
+			setUserName(userName);
 		}
 	};
 	return (
@@ -52,13 +56,6 @@ const Header = (props) => {
 			</div>
 		</div>
 	);
-};
-
-Header.propTypes = {
-	name: PropTypes.string,
-	logo: PropTypes.string,
-	userName: PropTypes.string,
-	onClick: PropTypes.func,
 };
 
 export default Header;

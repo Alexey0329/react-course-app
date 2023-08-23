@@ -1,15 +1,17 @@
-import Button from '../../../../common/Button/Button';
-import styles from './EmptyCoursesList.module.css';
-import { ADD_NEW_COURSE_LABEL } from '../../../../constants';
-import { useNavigate } from 'react-router-dom';
 import { useState } from 'react';
 import PropTypes from 'prop-types';
+import { useNavigate } from 'react-router-dom';
+
+import Button from '../../../../common/Button/Button';
+import { ADD_NEW_COURSE_LABEL } from '../../../../constants';
+
+import styles from './EmptyCoursesList.module.css';
 
 const EmptyCoursesList = () => {
 	const [showButton, setShowButton] = useState(true);
 	const navigate = useNavigate();
 
-	// FIXME - how to handle status of user admin/not admin without localStorage ?
+	// on refresh user state info is lost
 	const isUserAdmin = () => {
 		return localStorage.getItem('isAdmin');
 	};

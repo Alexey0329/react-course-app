@@ -1,39 +1,47 @@
 import React, { useState } from 'react';
-import './CreateCourse.css';
+import { useSelector, useDispatch } from 'react-redux';
+import { useNavigate } from 'react-router-dom';
+
 import Button from '../../common/Button/Button';
 import Input from '../../common/Input/Input';
-import { Link, useNavigate } from 'react-router-dom';
 import {
 	CANCEL_LABEL,
 	CREATE_AUTHOR_LABEL,
 	CREATE_COURSE_LABEL,
-	mockedAuthorsList,
-	mockedCoursesList,
-	SERVER_URL,
 } from '../../constants';
 import { formatTime } from '../../helpers/getSourseDuration';
 import AuthorItem from './components/AuthorItem/AuthorItem';
-import PropTypes from 'prop-types';
 
-const CreateCourse = (props) => {
+import { addNewCourseAction } from '../../store/courses/actions';
+import { addNewAuthorAction } from '../../store/authors/actions';
+import { getAuthors } from '../../store/selectors';
+import { createAuthor, createCourse } from '../../services';
+
+import './CreateCourse.css';
+
+const CreateCourse = () => {
+	const dispatch = useDispatch();
+	const availableAuthors = useSelector(getAuthors);
+	const navigate = useNavigate();
+
 	const [formData, setFormData] = useState({
 		title: '',
 		description: '',
 		duration: '',
-		authorsList: [],
+		authors: [],
 	});
 	const [newAuthor, setNewAuthor] = useState('');
-
-	const [availableAuthors, setAvailableAuthors] = useState([
-		...mockedAuthorsList,
-	]);
 
 	const [formErrors, setFormErrors] = useState({
 		title: '',
 		description: '',
 		duration: '',
-		author: '',
+		authors: '',
 	});
+
+	const handleCancel = (e) => {
+		navigate('/courses');
+	};
 
 	const handleAuthorsChange = (event) => {
 		setNewAuthor(event.target.value);
@@ -41,10 +49,18 @@ const CreateCourse = (props) => {
 
 	const handleInputChange = (event) => {
 		const { name, value } = event.target;
-		setFormData({
-			...formData,
-			[name]: value,
-		});
+
+		if (name === 'duration') {
+			setFormData((formData) => ({
+				...formData,
+				[name]: parseInt(value, 10),
+			}));
+		} else {
+			setFormData((formData) => ({
+				...formData,
+				[name]: value,
+			}));
+		}
 	};
 
 	const handleCreateCourse = async (e) => {
@@ -61,53 +77,31 @@ const CreateCourse = (props) => {
 		) {
 			setFormErrors(requiredErrors);
 		} else {
-			// fake update
-			props.onAddCourse(formData);
-
-			//server doesnt work
-			const response = await fetch(`${SERVER_URL}/courses/add`, {
-				method: 'POST',
-				body: JSON.stringify(formData),
-				headers: {
-					'Content-Type': 'application/json',
-				},
-			});
-
-			const result = await response.json();
-			if (result.successful) {
-				console.log(result);
+			const authorIds = formData.authors.map((author) => author.id);
+			const fdata = {
+				...formData,
+				authors: authorIds,
+			};
+			const courseResponse = await createCourse(fdata);
+			console.log(courseResponse);
+			if (courseResponse.successful) {
+				dispatch(addNewCourseAction(courseResponse.result));
+				navigate('/courses');
 			} else {
-				console.log(result);
+				console.log(courseResponse);
 			}
 		}
 	};
 
 	const handleCreateAuthor = async () => {
-		//server doesnt work
-		const response = await fetch(`${SERVER_URL}/authors/add`, {
-			method: 'POST',
-			body: JSON.stringify({ name: newAuthor }),
-			headers: {
-				'Content-Type': 'application/json',
-			},
-		});
-
-		const result = await response.json();
-		if (result.successful) {
-			console.log(result);
-		} else {
-			setFormErrors({ server: result.result, login: result.errors });
+		const authorToCreate = {
+			name: newAuthor,
+		};
+		const authorResponse = await createAuthor(authorToCreate);
+		if (authorResponse.successful) {
+			dispatch(addNewAuthorAction(authorResponse.result));
+			setNewAuthor('');
 		}
-		// add fake data to mocked list
-		let randomUUID = crypto['randomUUID']();
-		setAvailableAuthors([
-			{ name: newAuthor, id: randomUUID },
-			...availableAuthors,
-		]);
-	};
-	const navigate = useNavigate();
-	const handleCancel = (e) => {
-		navigate('/courses');
 	};
 
 	const availableAuthorsList = availableAuthors.map((current) => {
@@ -119,16 +113,14 @@ const CreateCourse = (props) => {
 				onAdd={() => {
 					return setFormData({
 						...formData,
-						authorsList: [current, ...formData.authorsList],
+						authors: [current, ...formData.authors],
 					});
 				}}
 				onRemove={() =>
 					setFormData({
 						...formData,
-						authorsList: [
-							...formData.authorsList.filter(
-								(author) => author.id !== current.id
-							),
+						authors: [
+							...formData.authors.filter((author) => author.id !== current.id),
 						],
 					})
 				}
@@ -192,7 +184,7 @@ const CreateCourse = (props) => {
 										name='author'
 										value={newAuthor}
 										onChange={handleAuthorsChange}
-										error={formErrors.author}
+										error={formErrors.authors}
 									/>
 								</div>
 								<span>
@@ -207,11 +199,11 @@ const CreateCourse = (props) => {
 						<div className='authors-container-right'>
 							<div className='edit-block'>Course Authors</div>
 							<div className='edit-input-group'>
-								{[
-									...new Set(formData.authorsList.map((auth) => auth.name)),
-								].map((uniqueName) => (
-									<div key={uniqueName}>{uniqueName}</div>
-								))}
+								{[...new Set(formData.authors.map((auth) => auth.name))].map(
+									(uniqueName) => (
+										<div key={uniqueName}>{uniqueName}</div>
+									)
+								)}
 							</div>
 						</div>
 					</div>
@@ -227,18 +219,6 @@ const CreateCourse = (props) => {
 			</div>
 		</div>
 	);
-};
-
-CreateCourse.propTypes = {
-	label: PropTypes.string,
-	onClick: PropTypes.func,
-	name: PropTypes.string,
-	uniqueName: PropTypes.string,
-	id: PropTypes.string,
-	author: PropTypes.exact({
-		name: PropTypes.string,
-		id: PropTypes.string,
-	}),
 };
 
 export default CreateCourse;
