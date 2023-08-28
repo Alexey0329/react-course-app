@@ -1,12 +1,14 @@
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
+
 import Button from '../../common/Button/Button';
 import Input from '../../common/Input/Input';
-import styles from './Registration.css';
-import { LOGIN_LABEL, SERVER_URL } from '../../constants';
-import PropTypes from 'prop-types';
+import { LOGIN_LABEL } from '../../constants';
+import { registrationRequest } from '../../services';
 
-const Registration = (props) => {
+import styles from './Registration.css';
+
+const Registration = () => {
 	const [formData, setFormData] = useState({
 		name: '',
 		email: '',
@@ -43,15 +45,7 @@ const Registration = (props) => {
 		) {
 			setFormErrors(requiredErrors);
 		} else {
-			const response = await fetch(`${SERVER_URL}/register`, {
-				method: 'POST',
-				body: JSON.stringify(formData),
-				headers: {
-					'Content-Type': 'application/json',
-				},
-			});
-
-			const result = await response.json();
+			const result = await registrationRequest(formData);
 			if (result.successful) {
 				navigate('/login');
 			} else {
@@ -112,12 +106,6 @@ const Registration = (props) => {
 			</div>
 		</div>
 	);
-};
-
-Registration.propTypes = {
-	name: PropTypes.string,
-	email: PropTypes.string,
-	onClick: PropTypes.func,
 };
 
 export default Registration;

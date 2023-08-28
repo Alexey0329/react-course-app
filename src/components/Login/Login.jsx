@@ -1,10 +1,14 @@
 import React, { useState } from 'react';
-import './Login.css';
+import { useDispatch } from 'react-redux';
+import { Link, useNavigate } from 'react-router-dom';
+
 import Button from '../../common/Button/Button';
 import Input from '../../common/Input/Input';
-import { Link, useNavigate } from 'react-router-dom';
-import { LOGIN_LABEL, SERVER_URL } from '../../constants';
-import PropTypes from 'prop-types';
+import { LOGIN_LABEL } from '../../constants';
+import { userLoginAction } from '../../store/user/actions';
+import { loginRequest } from '../../services';
+
+import './Login.css';
 
 const Login = () => {
 	const [formData, setFormData] = useState({
@@ -28,6 +32,7 @@ const Login = () => {
 	};
 
 	const navigate = useNavigate();
+	const dispatch = useDispatch();
 
 	const handleSubmit = async (e) => {
 		e.preventDefault();
@@ -38,29 +43,24 @@ const Login = () => {
 		if (requiredErrors.email || requiredErrors.password) {
 			setFormErrors(requiredErrors);
 		} else {
-			const response = await fetch(`${SERVER_URL}/login`, {
-				method: 'POST',
-				body: JSON.stringify(formData),
-				headers: {
-					'Content-Type': 'application/json',
-				},
-			});
-
-			const result = await response.json();
+			const result = await loginRequest(formData);
 			if (result.successful) {
 				localStorage.setItem('userToken', result.result);
-				localStorage.setItem('userName', result.user.name);
-				if (result.user.name.toLowerCase().includes('admin')) {
+				// use localStorage because of bug. on refresh user state info is lost
+				localStorage.setItem('userName', result.user?.name);
+				if (
+					result.user?.name?.toLowerCase().includes('admin') ||
+					result.user?.email?.includes('admin')
+				) {
 					localStorage.setItem('isAdmin', true);
 				}
+				dispatch(userLoginAction(result.user));
 				navigate('/courses');
 			} else {
 				setFormErrors({ server: result.result, login: result.errors });
 			}
 		}
 	};
-
-	// FIXME - is there any other way to write large forms ?
 	return (
 		<div className='login-form-container'>
 			<div className='title'>Login</div>
@@ -99,13 +99,6 @@ const Login = () => {
 			</div>
 		</div>
 	);
-};
-
-Login.propTypes = {
-	server: PropTypes.string,
-	login: PropTypes.string,
-	password: PropTypes.string,
-	email: PropTypes.string,
 };
 
 export default Login;
