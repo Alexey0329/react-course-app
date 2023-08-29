@@ -1,10 +1,11 @@
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
+import { useDispatch } from 'react-redux';
 
 import Button from '../../common/Button/Button';
 import Input from '../../common/Input/Input';
 import { LOGIN_LABEL } from '../../constants';
-import { registrationRequest } from '../../services';
+import { userRegistration } from '../../store/user/thunk';
 
 import styles from './Registration.css';
 
@@ -30,6 +31,7 @@ const Registration = () => {
 		});
 	};
 	const navigate = useNavigate();
+	const dispatch = useDispatch();
 
 	const handleSubmit = async (e) => {
 		e.preventDefault();
@@ -45,12 +47,7 @@ const Registration = () => {
 		) {
 			setFormErrors(requiredErrors);
 		} else {
-			const result = await registrationRequest(formData);
-			if (result.successful) {
-				navigate('/login');
-			} else {
-				setFormErrors({ server: result.errors });
-			}
+			dispatch(userRegistration({ formData, navigate }));
 		}
 	};
 

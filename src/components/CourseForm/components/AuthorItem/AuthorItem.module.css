@@ -1,0 +1,16 @@
+.authorItem {
+  display: flex;
+}
+
+.authorItem div {
+  width: 200px;
+}
+
+.authorItem button {
+  all: initial;
+}
+
+.authorItem button img {
+  margin-left: 10px;
+  height: 20px;
+}

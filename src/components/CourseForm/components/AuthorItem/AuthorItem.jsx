@@ -1,15 +1,16 @@
 import React from 'react';
+import PropTypes from 'prop-types';
+
 import Button from '../../../../common/Button/Button';
 import trash from '../../../../assets/trashSmall.svg';
 import add from '../../../../assets/addSmall.svg';
-import './AuthorItem.css';
-import { mockedAuthorsList } from '../../../../constants';
-import PropTypes from 'prop-types';
+
+import styles from './AuthorItem.module.css';
 
 const AuthorItem = (props) => {
 	return (
-		<div className='author-item'>
-			<div className='author-name'>{props.name}</div>
+		<div className={styles.authorItem}>
+			<div className={styles.authorName}>{props.name}</div>
 			<Button onClick={props.onAdd} imagePath={add} />
 			<Button onClick={props.onRemove} imagePath={trash} />
 		</div>

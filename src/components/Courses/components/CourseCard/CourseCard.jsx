@@ -1,5 +1,5 @@
 import React from 'react';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 
 import Button from '../../../../common/Button/Button';
@@ -8,24 +8,29 @@ import { formatTime } from '../../../../helpers/getSourseDuration';
 import trash from '../../../../assets/trash.png';
 import edit from '../../../../assets/edit.png';
 import { SHOW_COURSE_LABEL } from '../../../../constants';
-import { deleteCourseAction } from '../../../../store/courses/actions';
-import { deleteCourse } from '../../../../services';
+import { deleteCourse } from '../../../../store/courses/thunk';
+import { getUser } from '../../../../store/selectors';
 
 import styles from './CourseCard.module.css';
 
 const CourseCard = (props) => {
 	const dispatch = useDispatch();
 	const navigate = useNavigate();
+	const user = useSelector(getUser);
 
-	const handleDeleteCourse = async (id) => {
-		const deleteResponse = await deleteCourse(id);
-		if (deleteResponse.successful) {
-			dispatch(deleteCourseAction(id));
-		}
+	const handleDeleteCourse = (id) => {
+		dispatch(deleteCourse(id));
+	};
+	const handleUpdateCourse = (id) => {
+		navigate(`/courses/update/${id}`);
 	};
 
-	const handleInfoClick = (course) => {
-		navigate(`/courses/${course.id}`);
+	const handleInfoClick = (id) => {
+		navigate(`/courses/${id}`);
+	};
+
+	const isUserAdmin = () => {
+		return user?.role?.toLowerCase() === 'admin';
 	};
 
 	return (
@@ -49,14 +54,22 @@ const CourseCard = (props) => {
 					<div className={styles.buttons}>
 						<Button
 							label={SHOW_COURSE_LABEL}
-							onClick={() => handleInfoClick(props)}
+							onClick={() => handleInfoClick(props.id)}
 						/>
-						<Button
-							className={styles.btnTrash}
-							imagePath={trash}
-							onClick={() => handleDeleteCourse(props.id)}
-						/>
-						<Button className={styles.btnEdit} imagePath={edit} />
+						{isUserAdmin() && (
+							<Button
+								className={styles.btnTrash}
+								imagePath={trash}
+								onClick={() => handleDeleteCourse(props.id)}
+							/>
+						)}
+						{isUserAdmin() && (
+							<Button
+								className={styles.btnEdit}
+								imagePath={edit}
+								onClick={() => handleUpdateCourse(props.id)}
+							/>
+						)}
 					</div>
 				</div>
 			</div>

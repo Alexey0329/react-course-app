@@ -1,6 +1,6 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 
 import Button from '../../common/Button/Button';
 import Input from '../../common/Input/Input';
@@ -11,15 +11,17 @@ import {
 } from '../../constants';
 import { formatTime } from '../../helpers/getSourseDuration';
 import AuthorItem from './components/AuthorItem/AuthorItem';
+import { getAuthors, getCourses } from '../../store/selectors';
+import { addAuthor } from '../../store/authors/thunk';
+import { addCourse, updateCourse } from '../../store/courses/thunk';
 
-import { addNewCourseAction } from '../../store/courses/actions';
-import { addNewAuthorAction } from '../../store/authors/actions';
-import { getAuthors } from '../../store/selectors';
-import { createAuthor, createCourse } from '../../services';
+import styles from './CourseForm.module.css';
 
-import './CreateCourse.css';
-
-const CreateCourse = () => {
+const CourseForm = (props) => {
+	const params = useParams();
+	const courseId = params.courseId;
+	const courses = useSelector(getCourses);
+	const authorsList = useSelector(getAuthors);
 	const dispatch = useDispatch();
 	const availableAuthors = useSelector(getAuthors);
 	const navigate = useNavigate();
@@ -30,6 +32,19 @@ const CreateCourse = () => {
 		duration: '',
 		authors: [],
 	});
+
+	useEffect(() => {
+		if (!props.isCreate) {
+			const course = courses.find((c) => c.id === courseId);
+			const { title, description, duration, authors } = course;
+			let authorsObj = authorsList.filter((author) =>
+				authors.includes(author.id)
+			);
+			const formData = { title, description, duration, authors: authorsObj };
+			setFormData(formData);
+		}
+	}, [props.isCreate, courseId, courses, authorsList]);
+
 	const [newAuthor, setNewAuthor] = useState('');
 
 	const [formErrors, setFormErrors] = useState({
@@ -82,14 +97,12 @@ const CreateCourse = () => {
 				...formData,
 				authors: authorIds,
 			};
-			const courseResponse = await createCourse(fdata);
-			console.log(courseResponse);
-			if (courseResponse.successful) {
-				dispatch(addNewCourseAction(courseResponse.result));
-				navigate('/courses');
+			if (!props.isCreate) {
+				dispatch(updateCourse({ course: fdata, courseId: courseId }));
 			} else {
-				console.log(courseResponse);
+				dispatch(addCourse(fdata));
 			}
+			navigate('/courses');
 		}
 	};
 
@@ -97,24 +110,26 @@ const CreateCourse = () => {
 		const authorToCreate = {
 			name: newAuthor,
 		};
-		const authorResponse = await createAuthor(authorToCreate);
-		if (authorResponse.successful) {
-			dispatch(addNewAuthorAction(authorResponse.result));
-			setNewAuthor('');
-		}
+		dispatch(addAuthor(authorToCreate));
+		setNewAuthor('');
 	};
 
 	const availableAuthorsList = availableAuthors.map((current) => {
+		const isAuthorAdded = formData.authors.some(
+			(author) => author.id === current.id
+		);
 		return (
 			<AuthorItem
 				key={current.id}
 				id={current.id}
 				name={current.name}
 				onAdd={() => {
-					return setFormData({
-						...formData,
-						authors: [current, ...formData.authors],
-					});
+					if (!isAuthorAdded) {
+						setFormData({
+							...formData,
+							authors: [current, ...formData.authors],
+						});
+					}
 				}}
 				onRemove={() =>
 					setFormData({
@@ -129,36 +144,36 @@ const CreateCourse = () => {
 	});
 
 	return (
-		<div className='edit-form-container'>
-			<div className='edit-form-page'>
-				<div className='title'>Course Edit/Create Page</div>
-				<div className='edit-form'>
-					<div className='edit-block'>Main Info</div>
-					<div className='main-info-container'>
+		<div className={styles.editFormContainer}>
+			<div className={styles.editFormPage}>
+				<div className={styles.title}>Course Edit/Create Page</div>
+				<div className={styles.editForm}>
+					<div className={styles.editBlock}>Main Info</div>
+					<div className={styles.mainInfoContainer}>
 						<label>Title:</label>
 						<input
-							className='main-info-input'
+							className={styles.mainInfoInput}
 							type='text'
 							id='title'
 							name='title'
 							value={formData.title}
 							onChange={handleInputChange}
 						/>
-						<div className='error'>{formErrors.title}</div>
+						<div className={styles.error}>{formErrors.title}</div>
 
 						<label>Description:</label>
 						<textarea
-							className='main-info-input'
+							className={styles.mainInfoInput}
 							id='description'
 							name='description'
 							value={formData.description}
 							onChange={handleInputChange}
 						/>
-						<div className='error'>{formErrors.description}</div>
+						<div className={styles.error}>{formErrors.description}</div>
 					</div>
-					<div className='duration-container'>
-						<div className='edit-block'>Duration</div>
-						<div className='edit-input-group'>
+					<div className={styles.durationContainer}>
+						<div className={styles.editBlock}>Duration</div>
+						<div className={styles.editInputGroup}>
 							<label>Duration:</label>
 							<input
 								type='text'
@@ -168,15 +183,15 @@ const CreateCourse = () => {
 								onChange={handleInputChange}
 							/>{' '}
 							<span>{formatTime(formData.duration)}</span>
-							<div className='error'>{formErrors.duration}</div>
+							<div className={styles.error}>{formErrors.duration}</div>
 						</div>
 					</div>
 
-					<div className='authors-container'>
-						<div className='authors-container-left'>
-							<div className='edit-block'>Authors</div>
-							<div className='authors-input-group'>
-								<div className='edit-input-group'>
+					<div className={styles.authorsContainer}>
+						<div className={styles.authorsContainerLeft}>
+							<div className={styles.editBlock}>Authors</div>
+							<div className={styles.authorsInputGroup}>
+								<div className={styles.editInputGroup}>
 									<Input
 										label='Authors Name'
 										type='text'
@@ -196,9 +211,9 @@ const CreateCourse = () => {
 								</span>
 							</div>
 						</div>
-						<div className='authors-container-right'>
-							<div className='edit-block'>Course Authors</div>
-							<div className='edit-input-group'>
+						<div className={styles.authorsContainerRight}>
+							<div className={styles.editBlock}>Course Authors</div>
+							<div className={styles.editInputGroup}>
 								{[...new Set(formData.authors.map((auth) => auth.name))].map(
 									(uniqueName) => (
 										<div key={uniqueName}>{uniqueName}</div>
@@ -207,12 +222,12 @@ const CreateCourse = () => {
 							</div>
 						</div>
 					</div>
-					<div className='authors-list-container'>
-						<div className='edit-block'>Authors List</div>
+					<div className={styles.authorsListContainer}>
+						<div className={styles.editBlock}>Authors List</div>
 						<div>{availableAuthorsList}</div>
 					</div>
 				</div>
-				<div className='action-buttons'>
+				<div className={styles.actionButtons}>
 					<Button onClick={handleCreateCourse} label={CREATE_COURSE_LABEL} />
 					<Button onClick={handleCancel} label={CANCEL_LABEL} />
 				</div>
@@ -221,4 +236,4 @@ const CreateCourse = () => {
 	);
 };
 
-export default CreateCourse;
+export default CourseForm;
