@@ -5,8 +5,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import Button from '../../common/Button/Button';
 import Input from '../../common/Input/Input';
 import { LOGIN_LABEL } from '../../constants';
-import { userLoginAction } from '../../store/user/actions';
-import { loginRequest } from '../../services';
+import { userLogin } from '../../store/user/thunk';
 
 import './Login.css';
 
@@ -43,22 +42,7 @@ const Login = () => {
 		if (requiredErrors.email || requiredErrors.password) {
 			setFormErrors(requiredErrors);
 		} else {
-			const result = await loginRequest(formData);
-			if (result.successful) {
-				localStorage.setItem('userToken', result.result);
-				// use localStorage because of bug. on refresh user state info is lost
-				localStorage.setItem('userName', result.user?.name);
-				if (
-					result.user?.name?.toLowerCase().includes('admin') ||
-					result.user?.email?.includes('admin')
-				) {
-					localStorage.setItem('isAdmin', true);
-				}
-				dispatch(userLoginAction(result.user));
-				navigate('/courses');
-			} else {
-				setFormErrors({ server: result.result, login: result.errors });
-			}
+			dispatch(userLogin({ formData: formData, navigate: navigate }));
 		}
 	};
 	return (

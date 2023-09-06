@@ -1,11 +1,8 @@
-import { combineReducers } from '@reduxjs/toolkit';
-
-import { coursesReducer } from './courses/reducer.js';
-import { authorsReducer } from './authors/reducer.js';
-import { userReducer } from './user/reducer.js';
-
-export const rootReducer = combineReducers({
-	courses: coursesReducer,
-	authors: authorsReducer,
-	user: userReducer,
-});
+import coursesSlice from '../store/courses/slice.js';
+import authorsSlice from '../store/authors/slice.js';
+import userSlice from './user/slice.js';
+export const rootReducer = {
+	courses: coursesSlice,
+	authors: authorsSlice,
+	user: userSlice,
+};

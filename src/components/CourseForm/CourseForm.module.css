@@ -1,11 +1,11 @@
-.edit-form-container {
+.editFormContainer {
   margin-top: 30px;
   display: flex;
   flex-direction: column;
   align-items: center;
 }
 
-.edit-form {
+.editForm {
   width: 1100px;
   padding: 20px 70px;
   background: #ffffff;
@@ -13,22 +13,22 @@
   border-radius: 4px;
   box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.1);
 }
-.edit-block {
+.editBlock {
   font-weight: 700;
   font-size: 24px;
   margin-bottom: 10px;
 }
 
-.main-info-container {
+.mainInfoContainer {
   margin-top: 10px;
 }
 
-.main-info-input {
+.mainInfoInput {
   margin: 0 auto;
   width: 100%;
 }
 
-textarea.main-info-input {
+textarea.mainInfoInput {
   height: 80px;
 }
 
@@ -40,45 +40,45 @@ textarea.main-info-input {
   color: #333e48;
 }
 
-.action-buttons {
+.actionButtons {
   margin-top: 20px;
   display: flex;
   flex-direction: row-reverse;
 }
 
-.action-buttons Button{
+.actionButtons Button{
 margin-left: 20px;
 }
 
-.authors-input-group {
+.authorsInputGroup {
   display: flex;
   align-items: center;
 }
-.authors-input-group Button {
+.authorsInputGroup Button {
   margin-left: 20px;
 margin-top: 23px;
 }
 
-.edit-input-group {
+.editInputGroup {
   margin: 10px auto;
 }
 
-.authors-list {
+.authorsList {
   height: 500px;
 }
 
-.edit-input-group input{
+.editInputGroup input{
  width: 400px;
 }
 
-.duration-container {
+.durationContainer {
   margin-top: 10px;
 }
-.authors-list-container {
+.authorsListContainer {
   margin-top: 10px;
 }
 
-.authors-container {
+.authorsContainer {
   display: flex;
   justify-content: space-between;
 }
@@ -106,5 +106,10 @@ input {
   font-weight: 400;
   font-size: 16px;
   line-height: 24px;
+}
+
+.error {
+  font-size: 12px;
+  color: red;
 }
 

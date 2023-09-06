@@ -1,19 +1,20 @@
 import { useState } from 'react';
-import PropTypes from 'prop-types';
 import { useNavigate } from 'react-router-dom';
+import { useSelector } from 'react-redux';
 
 import Button from '../../../../common/Button/Button';
 import { ADD_NEW_COURSE_LABEL } from '../../../../constants';
+import { getUser } from '../../../../store/selectors';
 
 import styles from './EmptyCoursesList.module.css';
 
 const EmptyCoursesList = () => {
+	const user = useSelector(getUser);
 	const [showButton, setShowButton] = useState(true);
 	const navigate = useNavigate();
 
-	// on refresh user state info is lost
 	const isUserAdmin = () => {
-		return localStorage.getItem('isAdmin');
+		return user?.role?.toLowerCase() === 'admin';
 	};
 
 	const handleCreateNewCourse = () => {
@@ -41,11 +42,6 @@ const EmptyCoursesList = () => {
 			)}
 		</div>
 	);
-};
-
-EmptyCoursesList.propTypes = {
-	label: PropTypes.string,
-	onClick: PropTypes.func,
 };
 
 export default EmptyCoursesList;
