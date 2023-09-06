@@ -11,8 +11,12 @@ const AuthorItem = (props) => {
 	return (
 		<div className={styles.authorItem}>
 			<div className={styles.authorName}>{props.name}</div>
-			<Button onClick={props.onAdd} imagePath={add} />
-			<Button onClick={props.onRemove} imagePath={trash} />
+			<Button data-testid='addButton' onClick={props.onAdd} imagePath={add} />
+			<Button
+				data-testid='removeButton'
+				onClick={props.onRemove}
+				imagePath={trash}
+			/>
 		</div>
 	);
 };

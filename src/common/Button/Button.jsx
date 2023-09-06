@@ -2,11 +2,15 @@ import React from 'react';
 import styles from './Button.module.css';
 import PropTypes from 'prop-types';
 
-const Button = ({ onClick, label, imagePath }) => {
+const Button = (props) => {
 	return (
-		<button onClick={onClick} className={styles.button}>
-			{!imagePath && label}
-			{imagePath && <img src={imagePath} alt={label} />}
+		<button
+			data-testid={props['data-testid']}
+			onClick={props.onClick}
+			className={styles.button}
+		>
+			{!props.imagePath && props.label}
+			{props.imagePath && <img src={props.imagePath} alt={props.label} />}
 		</button>
 	);
 };

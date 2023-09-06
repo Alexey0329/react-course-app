@@ -21,7 +21,7 @@ const Courses = () => {
 
 	const dispatch = useDispatch();
 
-	useEffect(() => {
+	React.useEffect(() => {
 		(async () => {
 			dispatch(fetchCourses());
 			dispatch(fetchAuthors());
